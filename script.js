@@ -21,27 +21,43 @@ fetch(url)
     totalPages = Math.ceil(totalCountries / countriesPerPage);
 
     totalCountEl.innerHTML = totalCountries + " countries";
-    pageCountEl.innerHTML = `Page: ${activePage}/${totalPages}`;
 
-    const startInd = (activePage - 1) * countriesPerPage; // 0, 3, 6
-    const endInd = activePage * countriesPerPage;
+    updateValues();
 
-    const slicedCountries = countries.slice(startInd, endInd);
-
-    displayAllCountries(slicedCountries);
+    regenerateCountriesView();
   })
   .catch((error) => console.log(error));
+
+function regenerateCountriesView() {
+  const startInd = (activePage - 1) * countriesPerPage; // 0, 3, 6
+  const endInd = activePage * countriesPerPage;
+
+  const slicedCountries = countries.slice(startInd, endInd);
+
+  displayAllCountries(slicedCountries);
+}
+
+function updateValues() {
+  pageCountEl.innerHTML = `Page: ${activePage}/${totalPages}`;
+}
 
 function displayAllCountries(countries) {
   countriesListEl.innerHTML = "";
 
   for (let country of countries) {
+    const {
+      name: { common },
+      flags: { png },
+      capital,
+      population,
+    } = country;
+
     const singleCountry = `
             <div class="single-country">
-                <img src="https://flagcdn.com/w320/cy.png"" alt="country flag" />
-                <div><strong>Cyprus</strong></div>
-                <div><b>Cap:</b></div>
-                <div><b>Pop: </b> 100</div>
+                <img src="${png}" alt="country flag" />
+                <div><strong>${common}</strong></div>
+                <div><b>Cap: </b>${capital ? capital.join(",") : "None"}</div>
+                <div><b>Pop: </b>${population.toLocaleString()}</div>
             </div>
         `;
 
@@ -49,6 +65,18 @@ function displayAllCountries(countries) {
   }
 }
 
-nextBtn.addEventListener("click", () => {});
+nextBtn.addEventListener("click", () => {
+  if (activePage < totalPages) {
+    activePage++;
+    updateValues();
+    regenerateCountriesView();
+  }
+});
 
-prevBtn.addEventListener("click", () => {});
+prevBtn.addEventListener("click", () => {
+  if (activePage > 1) {
+    activePage--;
+    updateValues();
+    regenerateCountriesView();
+  }
+});
