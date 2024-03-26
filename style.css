@@ -1,5 +1,4 @@
 .container {
-  width: 70%;
   padding: 1%;
   margin: 2% auto;
   border: 1px solid rgb(208, 206, 206);
@@ -74,5 +73,5 @@ header {
 
 #search {
   margin: 5px;
-  width: 300px;
+  width: 30%;
 }
